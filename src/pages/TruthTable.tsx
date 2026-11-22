@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Card, PageTitle } from "../components/Layout";
+import { Card, Challenge, PageTitle } from "../components/Layout";
+import { markDone, useProgress } from "../lib/progress";
 import { combinations, evaluate, parse, subExpressions, toText, variables } from "../lib/boolean";
 
 const EXAMPLES = ["(A AND B) OR NOT C", "A XOR B", "NOT (A AND B)", "NOT A OR NOT B", "(A OR B) AND (A OR C)", "A NAND B"];
@@ -7,6 +8,7 @@ const EXAMPLES = ["(A AND B) OR NOT C", "A XOR B", "NOT (A AND B)", "NOT A OR NO
 export default function TruthTable() {
   const [expr, setExpr] = useState("(A AND B) OR NOT C");
   const [showSteps, setShowSteps] = useState(true);
+  const done = useProgress().includes("/truth-table");
 
   // Parse once per change; show a friendly message if it's not valid yet.
   const result = useMemo(() => {
@@ -20,9 +22,15 @@ export default function TruthTable() {
     }
   }, [expr]);
 
+  // Challenge: an expression that is 1 only when exactly two of A, B, C are 1.
+  const solved = !("error" in result) && result.vars.every((v) => ["A", "B", "C"].includes(v)) &&
+    combinations(["A", "B", "C"]).every((env) => evaluate(result.tree, env) === ([env.A, env.B, env.C].filter(Boolean).length === 2));
+  if (solved && !done) markDone("/truth-table");
+
   return (
     <>
       <PageTitle
+        n="03"
         module="Mathematics for Computing"
         title="Truth table builder"
         intro="Type any Boolean expression. You can use words (AND, OR, NOT, XOR, NAND, NOR) or symbols (& | ! ^ and A' for NOT A)."
@@ -83,6 +91,10 @@ export default function TruthTable() {
           </table>
         </Card>
       )}
+      <Challenge done={done || solved} title="Write an expression that is 1 only when exactly two of A, B and C are 1.">
+        <p className="text-sm text-ink/70">Type it in the box at the top. The output column should show 1 on exactly three rows: 011, 101 and 110.</p>
+        {solved && <p className="mt-2 font-mono text-sm text-on">✓ {expr}</p>}
+      </Challenge>
     </>
   );
 }

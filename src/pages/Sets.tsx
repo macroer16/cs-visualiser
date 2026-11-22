@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Card, PageTitle } from "../components/Layout";
+import { Card, Challenge, PageTitle } from "../components/Layout";
+import { markDone, useProgress } from "../lib/progress";
 import { evaluate, parse } from "../lib/boolean";
 
 // Set expressions reuse the Boolean parser: ∪ = OR, ∩ = AND, ' = complement.
@@ -47,9 +48,16 @@ export default function Sets() {
     ? [...sets.U].filter((x) => evaluate(tree, Object.fromEntries(names.map((n) => [n, sets[n as "A"].has(x)]))))
     : [];
 
+  // Challenge: with 3 sets, shade only the part of A and B that is not in C.
+  const done = useProgress().includes("/sets");
+  const solved = count === 3 && !!tree && regions.every((env) => evaluate(tree, env) === (env.A && env.B && !env.C)) &&
+    !["(A ∩ B) − C"].includes(expr.trim());
+  if (solved && !done) markDone("/sets");
+
   return (
     <>
       <PageTitle
+        n="04"
         module="Mathematics for Computing"
         title="Sets & Venn diagrams"
         intro="Pick an operation (or type your own) and the matching region lights up. Edit the elements to see the actual answer set."
@@ -142,6 +150,10 @@ export default function Sets() {
           </p>
         </Card>
       </div>
+      <Challenge done={done || solved} title="Switch to 3 sets and shade only what's in both A and B, but not in C.">
+        <p className="text-sm text-ink/70">Type your own expression — the preset button doesn&apos;t count. Hint: there&apos;s more than one way to write it.</p>
+        {solved && <p className="mt-2 font-mono text-sm text-on">✓ {expr}</p>}
+      </Challenge>
     </>
   );
 }

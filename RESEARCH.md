@@ -22,3 +22,15 @@ Before building I looked at interactive learning tools and design references to 
 8. **Warm neutral palette + one accent.** Off-white paper, near-black ink and a single blue, avoiding default purple gradients (tasteskill).
 9. **Left-aligned hierarchy and real copy.** Short module label, clear title, one-line instruction — no filler feature cards.
 10. **Works on a phone.** Big tap targets on gate ports, scrollable tables and touch dragging, checked at mobile width.
+
+## Redesign (Nov 2026)
+
+Second round of research: ~130 explorable explanations from awesome-explorables and the Interactive-Learning list,
+plus NandGame, Bartosz Ciechanowski's articles, Red Blob Games and setosa.io, and Nicky Case's design patterns.
+
+What changed because of it:
+- **A hook first.** The home page opens with eight switches you can flip — no reading needed (Case: interest curve).
+- **Start small, build big.** The tools became six numbered chapters on a path, from bits to a CPU (NandGame).
+- **See, model, apply.** Each chapter ends with a challenge that checks your answer (Case: embedded problems).
+- **Progress.** Ticks in the nav and on the path, saved in localStorage (achiever motivation).
+- **No AI-template look.** The grid of icon cards is gone. Graph paper, ink borders with hard shadows, a highlighter, Bricolage Grotesque + JetBrains Mono.

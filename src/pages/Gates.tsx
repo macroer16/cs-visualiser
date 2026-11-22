@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import type { PointerEvent as RPointerEvent } from "react";
-import { Card, PageTitle } from "../components/Layout";
+import { Card, Challenge, PageTitle } from "../components/Layout";
+import { markDone, useProgress } from "../lib/progress";
 
 // ----- Model -----
 type GateType = "AND" | "OR" | "NOT" | "NAND" | "NOR" | "XOR";
@@ -160,6 +161,14 @@ export default function Gates() {
     return rows;
   }, [gates, wires, nInputs]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Challenge: make lamp Q behave like XOR using only AND, OR and NOT.
+  const done = useProgress().includes("/gates");
+  const qIndex = usedOutputs.indexOf("Q");
+  const solved = nInputs === 2 && qIndex >= 0 && gates.length > 0 &&
+    gates.every((g) => g.type === "AND" || g.type === "OR" || g.type === "NOT") &&
+    table.every((r) => !!r.outs[qIndex] === (r.env.A !== r.env.B));
+  if (solved && !done) markDone("/gates");
+
   const pos = (id: string) => {
     if (id.startsWith("in-")) { const s = sources.find((s) => s.id === id); return s ? { x: s.x + 30, y: s.y } : null; }
     const g = gates.find((g) => g.id === id);
@@ -174,6 +183,7 @@ export default function Gates() {
   return (
     <>
       <PageTitle
+        n="02"
         module="Computer Systems Fundamentals"
         title="Logic gates"
         intro="Drag gates onto the board (or tap to add). To wire: click an output dot, then an input dot. Click the switches to flip inputs — green means 1."
@@ -327,6 +337,13 @@ export default function Gates() {
         )}
         <p className="mt-3 text-xs text-stone-500">The highlighted row matches the switches right now.</p>
       </Card>
+
+      <Challenge done={done || solved} title="Build XOR using only AND, OR and NOT gates.">
+        <p className="text-sm text-ink/70">
+          Clear the board, use 2 inputs, and wire your circuit into lamp Q. Q should light when exactly one switch is on. The truth
+          table above checks every case for you. Hint: (A OR B) AND NOT (A AND B).
+        </p>
+      </Challenge>
     </>
   );
 }

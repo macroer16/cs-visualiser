@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Card, PageTitle } from "../components/Layout";
+import { Card, Challenge, PageTitle } from "../components/Layout";
+import { markDone, useProgress } from "../lib/progress";
 import { BASES, format, fromDecimalSteps, groupBits, isValid, parseIn, toDecimalSteps, twosComplement } from "../lib/bases";
 
 export default function Bases() {
@@ -7,6 +8,10 @@ export default function Bases() {
   const [base, setBase] = useState(10);
   const [width, setWidth] = useState(8);
   const [target, setTarget] = useState(2);
+  const [answer, setAnswer] = useState("");
+  const done = useProgress().includes("/bases");
+  const correct = answer.replace(/\s/g, "") === "10101101";
+  if (correct && !done) markDone("/bases");
 
   const valid = isValid(text, base);
   const n = valid ? parseIn(text, base) : 0;
@@ -14,6 +19,7 @@ export default function Bases() {
   return (
     <>
       <PageTitle
+        n="01"
         module="Computer Systems Fundamentals"
         title="Number bases"
         intro="Type a number in any base. Every other base updates as you type, and the working shows how to do it by hand in an exam."
@@ -122,6 +128,13 @@ export default function Bases() {
           </Card>
         </>
       )}
+
+      <Challenge done={done || correct} title="Write 173 in 8-bit binary.">
+        <p className="text-sm text-ink/70">Use repeated division by 2 above if you get stuck — then check your answer by flipping it back.</p>
+        <input value={answer} onChange={(e) => setAnswer(e.target.value)} placeholder="e.g. 0000 0000" aria-label="Your answer in binary"
+          className="mt-3 w-full max-w-xs rounded-lg border-2 border-ink bg-white px-3 py-2 font-mono text-lg" />
+        {answer && !correct && <p className="mt-2 font-mono text-sm text-ink/60">not yet — {answer.replace(/[^01]/g, "").length}/8 bits</p>}
+      </Challenge>
     </>
   );
 }

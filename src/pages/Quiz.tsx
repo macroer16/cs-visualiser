@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, PageTitle } from "../components/Layout";
 import { newQuiz } from "../lib/quiz";
+import { markDone } from "../lib/progress";
 
 export default function Quiz() {
   const [questions, setQuestions] = useState(() => newQuiz());
@@ -11,6 +12,7 @@ export default function Quiz() {
 
   const q = questions[index];
   const finished = index >= questions.length;
+  if (finished && score >= 8) markDone("/quiz");
 
   const choose = (i: number) => {
     if (picked !== null) return;
@@ -22,7 +24,7 @@ export default function Quiz() {
 
   return (
     <>
-      <PageTitle module="Both modules" title="Quiz mode" intro="Ten random questions across every topic. Numbers change every time, so you can't just memorise the answers." />
+      <PageTitle n="06" module="Both modules" title="The final test" intro="Ten random questions across every chapter. Numbers change every time, so you can't just memorise the answers. Score 8 or more to finish the path." />
 
       <div className="mx-auto max-w-2xl">
         {finished ? (

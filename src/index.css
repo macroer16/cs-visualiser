@@ -1,22 +1,46 @@
 @import "tailwindcss";
 
-/* Warm neutral base + one strong accent (blue). */
+/* Graph paper, ink and highlighter. */
 @theme {
-  --color-paper: #f7f4ee;
-  --color-ink: #1c1917;
-  --color-accent: #1d4ed8;
-  --color-on: #16a34a;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --color-paper: #fbfaf5;
+  --color-ink: #17171a;
+  --color-accent: #2b59ff;   /* ink blue */
+  --color-on: #13a35a;       /* "1" / lamp-on green */
+  --color-hi: #ffe14d;       /* highlighter yellow */
+  --color-pink: #ff7eb6;
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", cursive;
 }
 
 body {
-  background: var(--color-paper);
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(rgba(43, 89, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(43, 89, 255, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
 
+/* Hand-drawn highlighter stroke behind a word. */
+.hl {
+  background-image: linear-gradient(transparent 52%, var(--color-hi) 52%, var(--color-hi) 90%, transparent 90%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Cards: flat white with an ink border and a hard offset shadow, like a sticker on paper. */
+@layer components {
+  .sheet {
+    background-color: white;
+    border: 2px solid var(--color-ink);
+    border-radius: 14px;
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+}
+
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
 }

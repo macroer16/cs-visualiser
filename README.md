@@ -3,9 +3,15 @@
 Interactive revision tools for first-year Computer Science — built for the University of Westminster modules
 **Mathematics for Computing** and **Computer Systems Fundamentals**, useful for any first-year CS course.
 
-![Logic gates](docs/gates.png)
+![Home: flip the switches](docs/home.png)
 
-## Tools
+**Live:** https://cs-visualiser.vercel.app
+
+## How it works
+
+It's a path in six chapters, from a single bit to a working CPU. Each chapter ends with a **challenge** (write 173 in binary, build XOR from AND/OR/NOT, predict what the CPU outputs…). Finishing one ticks it off, and progress is saved in your browser.
+
+## Chapters
 
 | Tool | What it does |
 | --- | --- |
@@ -14,7 +20,7 @@ Interactive revision tools for first-year Computer Science — built for the Uni
 | **Truth table builder** | Type an expression like `(A AND B) OR NOT C` (or `A' + B`) and get the full table with working columns. |
 | **Sets & Venn diagrams** | Shade union, intersection, difference and complement for 2 or 3 sets, and compute the answer with real elements. |
 | **Fetch–decode–execute** | Step through a tiny accumulator CPU running a real program; PC, MAR, MDR, CIR and ACC light up as they change. |
-| **Quiz** | 10 questions across every topic. Numbers are randomised, so it's different each time. |
+| **Final test** | 10 questions across every chapter. Numbers are randomised, so it's different each time. Score 8+ to finish. |
 
 | | |
 | --- | --- |

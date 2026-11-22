@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Card, PageTitle } from "../components/Layout";
+import { Card, Challenge, PageTitle } from "../components/Layout";
+import { markDone, useProgress } from "../lib/progress";
 import { SAMPLE, SUBTRACT, describe, initial, step } from "../lib/cpu";
 import type { CpuState, Register } from "../lib/cpu";
 
@@ -17,6 +18,10 @@ export default function Cpu() {
   const [cpu, setCpu] = useState<CpuState>(() => initial(PROGRAMS[0].memory));
   const [playing, setPlaying] = useState(false);
   const [log, setLog] = useState<string[]>([]);
+  const [guess, setGuess] = useState<number | null>(null);
+  const done = useProgress().includes("/cpu");
+  const solved = guess === 12;
+  if (solved && !done) markDone("/cpu");
 
   const codeLength = PROGRAMS[program].memory.indexOf(0) + 1; // instructions end at the first HLT
 
@@ -34,6 +39,7 @@ export default function Cpu() {
   return (
     <>
       <PageTitle
+        n="05"
         module="Computer Systems Fundamentals"
         title="Fetch–decode–execute"
         intro="A tiny CPU runs a real program one micro-step at a time. Watch which register changes (highlighted) and read what's happening underneath."
@@ -129,6 +135,18 @@ export default function Cpu() {
           </ol>
         </Card>
       )}
+      <Challenge done={done || solved} title="Predict it: what will the “Subtract: 20 − 8” program output?">
+        <p className="text-sm text-ink/70">Read the memory table for that program (LDA 6, SUB 7, …) and work it out before you run it.</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {[28, 12, 8, 20].map((n) => (
+            <button key={n} onClick={() => setGuess(n)}
+              className={`rounded-lg border-2 border-ink px-4 py-2 font-mono font-bold ${guess === n ? (n === 12 ? "bg-on text-white" : "bg-pink") : "bg-white hover:bg-hi"}`}>
+              {n}
+            </button>
+          ))}
+        </div>
+        {guess !== null && guess !== 12 && <p className="mt-2 text-sm">Not quite — the ACC starts with memory[6] = 20, then SUB takes away memory[7]. Try again, or run it.</p>}
+      </Challenge>
     </>
   );
 }
